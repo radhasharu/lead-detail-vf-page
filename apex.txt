@@ -1,0 +1,81 @@
+public class DEVC_LeadDetail{
+    public String leadId{ get; set;}
+    public Lead lead{ get; set;}
+    public boolean displayPopup {get; set;}   
+    public DEVC_ModalWrapper mwrapper{get;set;}
+    public List<SelectOption> stageOptions{get;set;}
+    
+    
+    public DEVC_LeadDetail(ApexPages.StandardController stdController){
+        String fullURL = ApexPages.currentPage().getURL();
+        leadId = ApexPages.CurrentPage().getparameters().get('id');
+         lead=[SELECT firstname,lastname,email,phone,company FROM Lead where id = :leadId];
+          getSelectStage();
+    }
+    
+    public DEVC_LeadDetail(){
+        leadId = ApexPages.CurrentPage().getparameters().get('id');
+        lead=[SELECT firstname,lastname,name,email,phone,company FROM Lead where id = :leadId];
+           getSelectStage();
+        
+    }
+    
+    public void getSelectStage(){
+          stageOptions= new List<SelectOption>();
+        stageOptions.add(new SelectOption('','-None-'));
+        stageOptions.add(new SelectOption('Prospecting','Prospecting'));
+        stageOptions.add(new SelectOption('Qualification','Qualification'));
+        stageOptions.add(new SelectOption('Price Quote','Price Quote'));
+        stageOptions.add(new SelectOption('Closed','Closed'));
+      
+    
+    }
+    public void initMethod(){
+         Account acc;
+         Contact c;
+         Opportunity opp;
+        if(String.isNotBlank(lead.company)){
+            acc = new Account(Name=lead.company, Phone=lead.phone);
+            database.insert(acc);
+        }
+        if(String.isNotBlank(lead.lastname)){
+             c= new Contact(FirstName=lead.FirstName, LastName=lead.LastName);
+             Insert c;
+        }
+        if(String.isNotBlank(mwrapper.oppName)){
+            
+            opp = new Opportunity(Name=mwrapper.oppName,CloseDate=mwrapper.oppClosedDate,StageName=mwrapper.selectedStage);
+            Insert opp;
+        
+        }
+    
+    }
+    
+    
+      
+    
+    public void closePopup() {        
+        displayPopup = false;    
+    }     
+    public void showPopup() {        
+        displayPopup = true;    
+    }
+    
+     public class DEVC_ModalWrapper{
+        
+        
+        public Date oppClosedDate {get; set;}
+        public String selectedStage{get;set;}
+        public String oppName{get; set;}
+        
+        public DEVC_ModalWrapper(){
+            
+            this.oppClosedDate=Date.today()+30;
+            this.selectedStage='';
+            this.oppName='';
+        }
+        
+        
+    }
+    
+}
