@@ -30,6 +30,7 @@
             z-index: 9998;
         }
      </style>
+                 
                 <apex:sectionHeader title="Lead" subtitle="Lead Details"   />
                 <apex:form >
                     <apex:pageBlock >
@@ -65,16 +66,17 @@
         <apex:outputPanel id="tstpopup">
         <apex:outputPanel styleClass="popupBackground" layout="block" rendered="{!displayPopUp}"/>
             <apex:outputPanel styleClass="custPopup" layout="block" rendered="{!displayPopUp}">
+            <apex:pagemessages id="messages3" />
                 <h1 class="text-center" style="font-family:monotype corsiva;">Convert lead</h1>
                 <hr size="3px" color="gray"/>
                    
                     <apex:pageBlock >
                        <apex:pageBlockSection title="Account Details">
-                        <apex:inputField value="{!lead.Company}" />
+                        <apex:input type="text" value="{!mwrapper.accSite}" label="Account Site"/>
                         </apex:pageBlockSection> 
                         <apex:pageBlockSection title="Contact Details">
-                        <apex:inputField value="{!lead.firstname}" />
-                         <apex:inputField value="{!lead.lastname}" />
+                        <apex:input type="email" value="{!mwrapper.conEmail}" label="Contact Email"/>
+                         
                          </apex:pageBlockSection> 
                         <apex:pageBlockSection title="Opportunity Details">
                             <apex:input type="text" value="{!mwrapper.oppName}" label="Opportunity Name"/>
@@ -93,7 +95,7 @@
                 
                 
                 <apex:commandButton value="Cancel"  action="{!closePopup}" rerender="tstpopup"/>&nbsp;&nbsp;
-                <apex:commandButton value="Convert"  status="status" action="{!initMethod}"  />
+                <apex:commandButton value="Convert"  status="status" action="{!initMethod}" rerender="msgId" />
                 <c:Spinner ></c:Spinner>
             </apex:outputPanel>
         </apex:outputPanel>
